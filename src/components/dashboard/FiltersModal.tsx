@@ -21,11 +21,13 @@ interface FiltersModalProps {
   open: boolean;
   onClose: () => void;
   onApplyFilters: (filters: {
-    dateRange?: { from: Date; to: Date };
+    startDateRange?: { from: Date; to: Date };
+    endDateRange?: { from: Date; to: Date };
     status?: string;
   }) => void;
   initialFilters?: {
-    dateRange?: { from: Date; to: Date };
+    startDateRange?: { from: Date; to: Date };
+    endDateRange?: { from: Date; to: Date };
     status?: string;
   };
 }
@@ -36,23 +38,28 @@ const FiltersModal = ({
   onApplyFilters,
   initialFilters,
 }: FiltersModalProps) => {
-  const [dateRange, setDateRange] = useState<
+  const [startDateRange, setStartDateRange] = useState<
     { from: Date; to: Date } | undefined
-  >(initialFilters?.dateRange);
+  >(initialFilters?.startDateRange);
+  const [endDateRange, setEndDateRange] = useState<
+    { from: Date; to: Date } | undefined
+  >(initialFilters?.endDateRange);
   const [status, setStatus] = useState<string | undefined>(
     initialFilters?.status,
   );
 
   const handleApply = () => {
     onApplyFilters({
-      dateRange,
+      startDateRange,
+      endDateRange,
       status,
     });
     onClose();
   };
 
   const handleClear = () => {
-    setDateRange(undefined);
+    setStartDateRange(undefined);
+    setEndDateRange(undefined);
     setStatus(undefined);
     onApplyFilters({});
     onClose();
@@ -66,12 +73,22 @@ const FiltersModal = ({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label>Período</Label>
+            <Label>Data de Início</Label>
             <DatePickerWithRange
-              from={dateRange?.from}
-              to={dateRange?.to}
+              from={startDateRange?.from}
+              to={startDateRange?.to}
               onSelect={(range: { from: Date; to: Date }) =>
-                setDateRange(range)
+                setStartDateRange(range)
+              }
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Data de Término</Label>
+            <DatePickerWithRange
+              from={endDateRange?.from}
+              to={endDateRange?.to}
+              onSelect={(range: { from: Date; to: Date }) =>
+                setEndDateRange(range)
               }
             />
           </div>
