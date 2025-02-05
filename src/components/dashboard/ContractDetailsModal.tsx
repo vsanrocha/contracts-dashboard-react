@@ -1,10 +1,11 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
-import { CalendarDays, Building2, DollarSign } from "lucide-react";
+import { CalendarDays, Building2, DollarSign, Text } from "lucide-react";
 import { FC } from "react";
 import { Contract } from "@/types/contract";
 import { formatCurrency } from "@/lib/utils";
+import dayjs from "dayjs";
 
 interface ContractDetailsModalProps {
   contract?: Contract;
@@ -75,12 +76,22 @@ const ContractDetailsModal: FC<ContractDetailsModalProps> = ({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground">Inicio Contrato</p>
-                <p className="font-medium">{contract.startDate}</p>
+                <p className="font-medium">{dayjs(contract.startDate).format('DD/MM/YYYY')}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Termino do Contrato</p>
-                <p className="font-medium">{contract.endDate}</p>
+                <p className="font-medium">{dayjs(contract.endDate).format('DD/MM/YYYY')}</p>
               </div>
+            </div>
+          </Card>
+
+          <Card className="p-4 space-y-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Text className="h-4 w-4" />
+              <span>Descrição do Contrato</span>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <span>{contract.description}</span>
             </div>
           </Card>
         </div>
