@@ -15,6 +15,7 @@ import { FC, useState } from "react";
 import { Contract } from "@/types/contract";
 import { formatCurrency } from "@/lib/utils";
 import ContractDetailsModal from "./ContractDetailsModal";
+import dayjs from "dayjs";
 
 interface ContractsTableProps {
   contracts?: Contract[];
@@ -75,7 +76,7 @@ const ContractsTable: FC<ContractsTableProps> = ({ contracts = [] }) => {
   );
 
   const onPageChange = (page: number) => {
-    setCurrentPage(()=> page);
+    setCurrentPage(() => page);
   };
 
   const handleRowClick = (contract: Contract) => {
@@ -121,6 +122,9 @@ const ContractsTable: FC<ContractsTableProps> = ({ contracts = [] }) => {
                       ))}
                   </div>
                 </TableHead>
+                <TableHead>Cliente/Fornecedor</TableHead>
+                <TableHead>Data de Inicio</TableHead>
+                <TableHead>Data do Vencimento</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead
                   className="cursor-pointer"
@@ -136,9 +140,7 @@ const ContractsTable: FC<ContractsTableProps> = ({ contracts = [] }) => {
                       ))}
                   </div>
                 </TableHead>
-                <TableHead>Data de Inicio</TableHead>
-                <TableHead>Data do Vencimento</TableHead>
-                <TableHead>Cliente/Fornecedor</TableHead>
+                <TableHead>Tipo de Contrato</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -149,15 +151,20 @@ const ContractsTable: FC<ContractsTableProps> = ({ contracts = [] }) => {
                   onClick={() => handleRowClick(contract)}
                 >
                   <TableCell className="font-medium">{contract.name}</TableCell>
+                  <TableCell>{contract.clientOrSupplier}</TableCell>
+                  <TableCell>
+                    {dayjs(contract.startDate).format("DD/MM/YYYY")}
+                  </TableCell>
+                  <TableCell>
+                    {dayjs(contract.endDate).format("DD/MM/YYYY")}
+                  </TableCell>
                   <TableCell>
                     <Badge className={statusColors[contract.status]}>
                       {statusText[contract.status]}
                     </Badge>
                   </TableCell>
                   <TableCell>{formatCurrency(contract.amount)}</TableCell>
-                  <TableCell>{contract.startDate}</TableCell>
-                  <TableCell>{contract.endDate}</TableCell>
-                  <TableCell>{contract.clientOrSupplier}</TableCell>
+                  <TableCell>{contract.type}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
