@@ -17,11 +17,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import DatePickerWithRange from "../ui/date-picker-with-range";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useAddContract } from "@/hooks/useContracts";
 import { ContractFormData } from "@/types/contract";
-import { set } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { contractSchema } from "@/schemas/contractSchema";
 
 interface AddContractModalProps {
   open?: boolean;
@@ -34,31 +36,39 @@ const defaultFormData: ContractFormData = {
   type: "",
   startDate: dayjs().toDate(),
   endDate: dayjs().add(30, "day").toDate(),
-  amount: 0,
+  amount: "",
   description: "",
   clientOrSupplier: "",
-}
+};
 
 const AddContractModal = ({
   open = true,
   onClose = () => {},
 }: AddContractModalProps) => {
-  const [formData, setFormData] = useState<ContractFormData>(defaultFormData);
-  const [amount, setAmount] = useState<string>();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<ContractFormData>({
+    resolver: zodResolver(contractSchema),
+    defaultValues: defaultFormData,
+  });
 
   const addContractMutation = useAddContract();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const formattedAmount = amount.replace(/\D/g, "").replace(/(\d{2})$/, ".$1");
-    addContractMutation.mutate({...formData, amount: Number(formattedAmount)});
+  const onSubmit = (data: ContractFormData) => {
+    const formattedAmount = String(data.amount)
+      .replace(/\D/g, "")
+      .replace(/(\d{2})$/, ".$1");
+    addContractMutation.mutate({ ...data, amount: Number(formattedAmount) });
     onClose();
   };
 
   useEffect(() => {
-    setFormData(defaultFormData);
-    setAmount("");
-  }, [open]);
+    reset(defaultFormData);
+  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -66,92 +76,127 @@ const AddContractModal = ({
         <DialogHeader>
           <DialogTitle>Criar Novo Contrato</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Nome do Contrato</Label>
-              <Input
-                id="name"
-                placeholder="Insira o nome do contrato"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="name"
+                    placeholder="Insira o nome do contrato"
+                    {...field}
+                  />
+                )}
               />
+              {errors.name && (
+                <small className="text-red-500">{errors.name.message}</small>
+              )}
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="clientOrSupplier">Cliente/Fornecedor</Label>
-              <Input
-                id="clientOrSupplier"
-                placeholder="Insira o nome do cliente/fornecedor"
-                value={formData.clientOrSupplier}
-                onChange={(e) =>
-                  setFormData({ ...formData, clientOrSupplier: e.target.value })
-                }
+              <Controller
+                name="clientOrSupplier"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="clientOrSupplier"
+                    placeholder="Insira o nome do cliente/fornecedor"
+                    {...field}
+                  />
+                )}
               />
+              {errors.clientOrSupplier && (
+                <small className="text-red-500">
+                  {errors.clientOrSupplier.message}
+                </small>
+              )}
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="type">Tipo</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, type: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o Tipo do Contrato" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Serviço">Serviço</SelectItem>
-                  <SelectItem value="Fornecimento">Fornecimento</SelectItem>
-                  <SelectItem value="Consultoria">Consultoria</SelectItem>
-                  <SelectItem value="TI">TI</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o Tipo do Contrato" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Serviço">Serviço</SelectItem>
+                      <SelectItem value="Fornecimento">Fornecimento</SelectItem>
+                      <SelectItem value="Consultoria">Consultoria</SelectItem>
+                      <SelectItem value="TI">TI</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.type && (
+                <small className="text-red-500">{errors.type.message}</small>
+              )}
             </div>
 
             <div className="grid gap-2">
               <Label>Duração do Contrato</Label>
-              <DatePickerWithRange
-                from={formData.startDate}
-                to={formData.endDate}
-                onSelect={(range: { from: Date; to: Date }) => {
-                  if (range?.from && range?.to) {
-                    setFormData({
-                      ...formData,
-                      startDate: range.from,
-                      endDate: range.to,
-                    });
-                  }
-                }}
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePickerWithRange
+                    from={field.value}
+                    to={field.value}
+                    onSelect={(range: { from: Date; to: Date }) => {
+                      if (range?.from && range?.to) {
+                        setValue("startDate", range.from);
+                        setValue("endDate", range.to);
+                      }
+                    }}
+                  />
+                )}
               />
+              {errors.startDate && (
+                <small className="text-red-500">
+                  {errors.startDate.message}
+                </small>
+              )}
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="value">Valor do Contrato</Label>
-              <Input
-                id="value"
-                type="currency"
-                placeholder="Insira o valor do contrato"
-                value={amount}
-                onChange={(e) =>
-                  setAmount(e.target.value)
-                }
+              <Controller
+                name="amount"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="value"
+                    type="currency"
+                    placeholder="Insira o valor do contrato"
+                    {...field}
+                  />
+                )}
               />
+              {errors.amount && (
+                <small className="text-red-500">{errors.amount.message}</small>
+              )}
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="description">Descrição</Label>
-              <Textarea
-                id="description"
-                placeholder="Descrição do contrato"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                className="h-24"
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="description"
+                    placeholder="Descrição do contrato"
+                    {...field}
+                    className="h-24"
+                  />
+                )}
               />
             </div>
           </div>
