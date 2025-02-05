@@ -55,7 +55,7 @@ const Home: FC<HomeProps> = ({
                 <Menu className="h-6 w-6" />
               </Button>
               <h1 className="text-xl sm:text-2xl font-bold">
-                Contract Dashboard
+                Dashboard
               </h1>
             </div>
             <Button
@@ -63,7 +63,7 @@ const Home: FC<HomeProps> = ({
               className="w-full sm:w-auto flex items-center justify-center gap-2"
             >
               <Plus className="h-4" />
-              Add Contract
+              Adicionar Contrato
             </Button>
           </div>
 
