@@ -32,7 +32,7 @@ const ContractDetailsModal: FC<ContractDetailsModalProps> = ({
         </DialogHeader>
         <div className="grid gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">{contract.contractName}</h2>
+            <h2 className="text-xl font-semibold">{contract.name}</h2>
             <Badge className={statusColors[contract.status]}>
               {contract.status.charAt(0).toUpperCase() +
                 contract.status.slice(1)}

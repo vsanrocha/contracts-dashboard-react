@@ -6,18 +6,10 @@ export interface Contract {
   endDate: string;
   status: "active" | "expired" | "pending" | "close_end";
   type: string;
-  amount: string;
+  amount: number;
 }
 
-export interface ContractFormData {
-  name: string;
-  clientOrSupplier: string;
-  startDate: Date;
-  endDate: Date;
-  type: string;
-  description: string;
-  amount: string;
-}
+export type ContractFormData = Omit<Contract, "id" | "status">;
 
 export interface ContractsState {
   contracts: Contract[];

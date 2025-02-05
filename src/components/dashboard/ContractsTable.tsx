@@ -13,6 +13,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { Search, SortAsc, SortDesc, Filter } from "lucide-react";
 import { FC } from "react";
 import { Contract } from "@/types/contract";
+import { formatCurrency } from "@/lib/utils";
 
 interface ContractsTableProps {
   contracts?: Contract[];
@@ -24,49 +25,27 @@ interface ContractsTableProps {
   totalPages?: number;
 }
 
-const defaultContracts: Contract[] = [
-  {
-    id: "1",
-    name: "Service Agreement A",
-    status: "active",
-    value: 50000,
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    company: "Tech Corp",
-  },
-  {
-    id: "2",
-    name: "Maintenance Contract B",
-    status: "pending",
-    value: 25000,
-    startDate: "2024-03-01",
-    endDate: "2025-02-28",
-    company: "Service Co",
-  },
-  {
-    id: "3",
-    name: "License Agreement C",
-    status: "expired",
-    value: 75000,
-    startDate: "2023-01-01",
-    endDate: "2023-12-31",
-    company: "Software Inc",
-  },
-];
-
 const ContractsTable: FC<ContractsTableProps> = ({
-  contracts = defaultContracts,
+  contracts = [],
   onSort = () => {},
   onFilter = () => {},
   onPageChange = () => {},
   currentPage = 1,
   totalPages = 5,
 }) => {
+
   const statusColors = {
     active: "bg-green-100 text-green-800",
     expired: "bg-red-100 text-red-800",
     pending: "bg-yellow-100 text-yellow-800",
   };
+
+  const statusText = {
+    active: "Ativo",
+    expired: "Expirado",
+    pending: "Pendente de Renovação",
+    close_end: "Próximo ao Vencimento",
+  }
 
   return (
     <div className="w-full bg-white p-3 sm:p-6 rounded-lg shadow overflow-x-auto">
@@ -123,14 +102,13 @@ const ContractsTable: FC<ContractsTableProps> = ({
                 <TableCell className="font-medium">{contract.name}</TableCell>
                 <TableCell>
                   <Badge className={statusColors[contract.status]}>
-                    {contract.status.charAt(0).toUpperCase() +
-                      contract.status.slice(1)}
+                    {statusText[contract.status]}
                   </Badge>
                 </TableCell>
-                <TableCell>${contract.value.toLocaleString()}</TableCell>
+                <TableCell>{formatCurrency(contract.amount)}</TableCell>
                 <TableCell>{contract.startDate}</TableCell>
                 <TableCell>{contract.endDate}</TableCell>
-                <TableCell>{contract.company}</TableCell>
+                <TableCell>{contract.clientOrSupplier}</TableCell>
               </TableRow>
             ))}
           </TableBody>

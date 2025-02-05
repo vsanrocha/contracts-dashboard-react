@@ -1,6 +1,8 @@
 import { FC, ReactNode } from "react";
 import { Card, CardContent } from "../ui/card";
 import { ArrowUpRight, ArrowDownRight, Clock, DollarSign } from "lucide-react";
+import { Contract } from "@/types/contract";
+import { formatCurrency } from "@/lib/utils";
 
 interface MetricCardProps {
   title: string;
@@ -31,7 +33,7 @@ const MetricCard: FC<MetricCardProps> = ({
           <div className="p-2 bg-gray-100 rounded-full">{icon}</div>
         </div>
         {trend !== undefined && (
-          <div className="flex items-center mt-4 space-x-2">
+          <div className="flex items-center mt-4 space-x-2 self-end">
             {isPositive ? (
               <ArrowUpRight className="h-4 w-4 text-green-500" />
             ) : (
@@ -53,41 +55,40 @@ const MetricCard: FC<MetricCardProps> = ({
 };
 
 interface MetricsHeaderProps {
-  totalContracts?: number;
-  activeContracts?: number;
-  expiringContracts?: number;
-  totalValue?: number;
-  onMetricClick?: (metric: string) => void;
+  contracts: Contract[];
 }
 
-const MetricsHeader: React.FC<MetricsHeaderProps> = ({
-  totalContracts = 156,
-  activeContracts = 123,
-  expiringContracts = 8,
-  totalValue = 1234567,
-}) => {
+const MetricsHeader: FC<MetricsHeaderProps> = ({contracts}) => {
+
+  const contractsCount=contracts?.length || 0
+  const activeContracts= contracts?.filter((c) => c.status === "active").length || 0
+  const expiringContracts= contracts?.filter((c) => c.status === "expired").length || 0
+
+  const totalAmount=
+    contracts?.reduce((sum, c) => sum + c.amount, 0) || 0
+
   const metrics = [
     {
-      title: "Total Contracts",
-      value: totalContracts,
+      title: "Total de Contratos",
+      value: contractsCount,
       trend: 12,
       icon: <DollarSign className="h-4 w-4" />,
     },
     {
-      title: "Active Contracts",
+      title: "Contratos Ativos",
       value: activeContracts,
       trend: 8,
       icon: <ArrowUpRight className="h-4 w-4" />,
     },
     {
-      title: "Expiring Soon",
+      title: "Contratos Próximos ao Vencimento",
       value: expiringContracts,
       trend: -5,
       icon: <Clock className="h-4 w-4" />,
     },
     {
-      title: "Total Value",
-      value: `$${totalValue.toLocaleString()}`,
+      title: "Valor Total dos Contratos",
+      value: formatCurrency(totalAmount),
       trend: 15,
       icon: <DollarSign className="h-4 w-4" />,
     },
