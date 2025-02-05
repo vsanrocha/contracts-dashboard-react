@@ -6,7 +6,7 @@ export interface Contract {
   endDate: Date;
   status: "active" | "expired" | "pending" | "close_end";
   type: string;
-  amount: number | string;
+  amount: number;
   description: string;
 }
 

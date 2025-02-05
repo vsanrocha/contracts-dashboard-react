@@ -73,7 +73,7 @@ const FiltersModal = ({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label>Data de Início</Label>
+            <Label>Data de Início do Contrato</Label>
             <DatePickerWithRange
               from={startDateRange?.from}
               to={startDateRange?.to}
@@ -83,7 +83,7 @@ const FiltersModal = ({
             />
           </div>
           <div className="grid gap-2">
-            <Label>Data de Término</Label>
+            <Label>Data de Término do Contrato</Label>
             <DatePickerWithRange
               from={endDateRange?.from}
               to={endDateRange?.to}
