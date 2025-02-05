@@ -17,8 +17,11 @@ import {
   SelectValue,
 } from "../ui/select";
 import DatePickerWithRange from "../ui/date-picker-with-range";
-import { addDays } from "date-fns";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { useAddContract } from "@/hooks/useContracts";
+import { ContractFormData } from "@/types/contract";
+import { set } from "react-hook-form";
 
 interface AddContractModalProps {
   open?: boolean;
@@ -26,81 +29,95 @@ interface AddContractModalProps {
   onSubmit?: (data: ContractFormData) => void;
 }
 
-interface ContractFormData {
-  contractName: string;
-  contractType: string;
-  startDate: Date;
-  endDate: Date;
-  value: string;
-  description: string;
+const defaultFormData: ContractFormData = {
+  name: "",
+  type: "",
+  startDate: dayjs().toDate(),
+  endDate: dayjs().add(30, "day").toDate(),
+  amount: 0,
+  description: "",
+  clientOrSupplier: "",
 }
 
 const AddContractModal = ({
   open = true,
   onClose = () => {},
-  onSubmit = () => {},
 }: AddContractModalProps) => {
-  const [formData, setFormData] = useState<ContractFormData>({
-    contractName: "",
-    contractType: "",
-    startDate: new Date(),
-    endDate: addDays(new Date(), 30),
-    value: "",
-    description: "",
-  });
+  const [formData, setFormData] = useState<ContractFormData>(defaultFormData);
+  const [amount, setAmount] = useState<string>();
+
+  const addContractMutation = useAddContract();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    const formattedAmount = amount.replace(/\D/g, "").replace(/(\d{2})$/, ".$1");
+    addContractMutation.mutate({...formData, amount: Number(formattedAmount)});
     onClose();
   };
+
+  useEffect(() => {
+    setFormData(defaultFormData);
+    setAmount("");
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] bg-white w-[95vw] sm:w-auto max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Contract</DialogTitle>
+          <DialogTitle>Criar Novo Contrato</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="contractName">Contract Name</Label>
+              <Label htmlFor="name">Nome do Contrato</Label>
               <Input
-                id="contractName"
-                placeholder="Enter contract name"
-                value={formData.contractName}
+                id="name"
+                placeholder="Insira o nome do contrato"
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, contractName: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
               />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="contractType">Contract Type</Label>
+              <Label htmlFor="clientOrSupplier">Cliente/Fornecedor</Label>
+              <Input
+                id="clientOrSupplier"
+                placeholder="Insira o nome do cliente/fornecedor"
+                value={formData.clientOrSupplier}
+                onChange={(e) =>
+                  setFormData({ ...formData, clientOrSupplier: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="type">Tipo</Label>
               <Select
-                value={formData.contractType}
+                value={formData.type}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, contractType: value })
+                  setFormData({ ...formData, type: value })
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select contract type" />
+                  <SelectValue placeholder="Selecione o Tipo do Contrato" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="service">Service Agreement</SelectItem>
-                  <SelectItem value="license">License Agreement</SelectItem>
-                  <SelectItem value="subscription">Subscription</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="Serviço">Serviço</SelectItem>
+                  <SelectItem value="Fornecimento">Fornecimento</SelectItem>
+                  <SelectItem value="Consultoria">Consultoria</SelectItem>
+                  <SelectItem value="TI">TI</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="grid gap-2">
-              <Label>Contract Duration</Label>
+              <Label>Duração do Contrato</Label>
               <DatePickerWithRange
                 from={formData.startDate}
                 to={formData.endDate}
-                onSelect={(range) => {
+                onSelect={(range: { from: Date; to: Date }) => {
                   if (range?.from && range?.to) {
                     setFormData({
                       ...formData,
@@ -113,23 +130,23 @@ const AddContractModal = ({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="value">Contract Value</Label>
+              <Label htmlFor="value">Valor do Contrato</Label>
               <Input
                 id="value"
-                type="number"
-                placeholder="Enter contract value"
-                value={formData.value}
+                type="currency"
+                placeholder="Insira o valor do contrato"
+                value={amount}
                 onChange={(e) =>
-                  setFormData({ ...formData, value: e.target.value })
+                  setAmount(e.target.value)
                 }
               />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Descrição</Label>
               <Textarea
                 id="description"
-                placeholder="Enter contract description"
+                placeholder="Descrição do contrato"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -141,9 +158,9 @@ const AddContractModal = ({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Cancelar
             </Button>
-            <Button type="submit">Add Contract</Button>
+            <Button type="submit">Criar Contrato</Button>
           </DialogFooter>
         </form>
       </DialogContent>

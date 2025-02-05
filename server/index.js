@@ -80,6 +80,7 @@ app.post('/api/contracts', async (req, res) => {
     newContract.id = `CT-${String(lastId + 1).padStart(3, '0')}`;
     newContract.createdAt = new Date().toISOString();
     newContract.status = 'active';
+    // newContract.amount = Number(newContract.amount);
 
     contracts.push(newContract);
     await writeContracts(contracts);

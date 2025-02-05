@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
+import dayjs from 'dayjs';
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+interface DatePickerWithRangeProps {
+  to?: Date;
+  from?: Date;
+  onSelect?: (date: DateRange) => void;
+}
+
 export default function DatePickerWithRange({
+  from,
+  to,
+  onSelect,
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: React.HTMLAttributes<HTMLDivElement> & DatePickerWithRangeProps) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from,
+    to,
   });
+
+  const changeDate = (date: DateRange) => {
+    setDate(date);
+    onSelect?.(date);
+  };
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -38,11 +52,11 @@ export default function DatePickerWithRange({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {dayjs(date.from).format("MMM DD, YYYY")} -{" "}
+                  {dayjs(date.to).format("MMM DD, YYYY")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                dayjs(date.from).format("MMM DD, YYYY")
               )
             ) : (
               <span>Pick a date</span>
@@ -55,7 +69,7 @@ export default function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={changeDate}
             numberOfMonths={2}
           />
         </PopoverContent>
