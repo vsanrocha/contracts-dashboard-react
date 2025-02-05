@@ -4,19 +4,17 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-console.log('foo')
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-console.log('foo')
 app.use(cors());
 app.use(express.json());
 
-const dataPath = path.join(__dirname, 'data', 'contracts.json');
+const dataPath = path.join(__dirname, 'data/contracts.json');
 
-// Helper function to read JSON file
+// Helper to read contracts
 async function readContracts() {
   try {
     const data = await fs.readFile(dataPath, 'utf8');
@@ -36,7 +34,6 @@ async function writeContracts(contracts) {
     throw error;
   }
 }
-
 app.get('/', async (req, res) => {
   try {
     const contracts = await readContracts();
@@ -81,6 +78,8 @@ app.post('/api/contracts', async (req, res) => {
       ? parseInt(contracts[contracts.length - 1].id.split('-')[1])
       : 0;
     newContract.id = `CT-${String(lastId + 1).padStart(3, '0')}`;
+    newContract.createdAt = new Date().toISOString();
+    newContract.status = 'active';
 
     contracts.push(newContract);
     await writeContracts(contracts);
@@ -126,6 +125,6 @@ app.delete('/api/contracts/:id', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
