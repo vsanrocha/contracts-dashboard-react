@@ -4,9 +4,10 @@ import ChartSection from "./dashboard/ChartSection";
 import ContractsTable from "./dashboard/ContractsTable";
 import AddContractModal from "./dashboard/AddContractModal";
 import ContractDetailsModal from "./dashboard/ContractDetailsModal";
+import FiltersModal from "./dashboard/FiltersModal";
 import Sidebar from "./dashboard/Sidebar";
 import { Button } from "./ui/button";
-import { Plus, Menu } from "lucide-react";
+import { Plus, Menu, Filter } from "lucide-react";
 import { Contract, ContractFormData } from "@/types/contract";
 import {
   useContracts,
@@ -24,16 +25,40 @@ const Home: FC<HomeProps> = ({
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(initialCollapsed);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showFiltersModal, setShowFiltersModal] = useState(false);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(
-    null
+    null,
   );
+  const [activeFilters, setActiveFilters] = useState<{
+    dateRange?: { from: Date; to: Date };
+    status?: string;
+  }>();
 
-  const { data: contracts, error, isLoading } = useContracts();
+  const { data: contracts = [], error, isLoading } = useContracts();
   const addContractMutation = useAddContract();
 
   const handleAddContract = (contract: ContractFormData) => {
     addContractMutation.mutate(contract);
+    setShowAddModal(false);
   };
+
+  const filteredContracts = contracts.filter((contract) => {
+    let matches = true;
+
+    if (activeFilters?.dateRange) {
+      const contractDate = new Date(contract.startDate);
+      matches =
+        matches &&
+        contractDate >= activeFilters.dateRange.from &&
+        contractDate <= activeFilters.dateRange.to;
+    }
+
+    if (activeFilters?.status) {
+      matches = matches && contract.status === activeFilters.status;
+    }
+
+    return matches;
+  });
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -54,42 +79,49 @@ const Home: FC<HomeProps> = ({
               >
                 <Menu className="h-6 w-6" />
               </Button>
-              <h1 className="text-xl sm:text-2xl font-bold">
-                Dashboard
-              </h1>
+              <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
             </div>
-            <Button
-              onClick={() => setShowAddModal(true)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2"
-            >
-              <Plus className="h-4" />
-              Adicionar Contrato
-            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                onClick={() => setShowFiltersModal(true)}
+                className="flex items-center gap-2"
+              >
+                <Filter className="h-4 w-4" />
+                Filtros
+              </Button>
+              <Button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Adicionar Contrato
+              </Button>
+            </div>
           </div>
 
           <MetricsHeader
-            contracts={contracts}
+            contracts={filteredContracts}
             onMetricClick={(metric) => {
-              const contract = contracts?.find((c) => {
-                if (metric === "active") return c.status === "Ativo";
-                if (metric === "pending")
-                  return c.status === "Pendente de Renovação";
+              const contract = filteredContracts.find((c) => {
+                if (metric === "active") return c.status === "active";
+                if (metric === "pending") return c.status === "pending";
                 return true;
               });
               if (contract) setSelectedContract(contract);
             }}
           />
-          <ChartSection contracts={contracts}/>
+          <ChartSection contracts={filteredContracts} />
           {isLoading ? (
             <div className="text-center py-4">Loading...</div>
           ) : error ? (
             <div className="text-center py-4 text-red-500">{error.message}</div>
           ) : (
             <ContractsTable
-              contracts={contracts || []}
-              currentPage={1} // Update this as needed
-              totalPages={1} // Update this as needed
-              onPageChange={(page) => {}} // Update this as needed
+              contracts={filteredContracts}
+              currentPage={1}
+              totalPages={1}
+              onPageChange={() => {}}
               onRowClick={(contract) => setSelectedContract(contract)}
             />
           )}
@@ -106,6 +138,15 @@ const Home: FC<HomeProps> = ({
         contract={selectedContract}
         open={!!selectedContract}
         onClose={() => setSelectedContract(null)}
+      />
+
+      <FiltersModal
+        open={showFiltersModal}
+        onClose={() => setShowFiltersModal(false)}
+        initialFilters={activeFilters}
+        onApplyFilters={(filters) => {
+          setActiveFilters(filters);
+        }}
       />
     </div>
   );
