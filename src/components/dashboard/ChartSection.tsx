@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { Card } from "../ui/card";
 import {
   Bar,
@@ -42,7 +42,7 @@ const defaultStatusData = [
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-const ChartSection: React.FC<ChartSectionProps> = ({
+const ChartSection: FC<ChartSectionProps> = ({
   expirationData = defaultExpirationData,
   statusData = defaultStatusData,
 }) => {

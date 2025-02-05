@@ -1,4 +1,4 @@
-import React from "react";
+import { FC, ReactNode } from "react";
 import { Card, CardContent } from "../ui/card";
 import { ArrowUpRight, ArrowDownRight, Clock, DollarSign } from "lucide-react";
 
@@ -6,10 +6,10 @@ interface MetricCardProps {
   title: string;
   value: string | number;
   trend?: number;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
-const MetricCard: React.FC<MetricCardProps> = ({
+const MetricCard: FC<MetricCardProps> = ({
   title = "Metric",
   value = "0",
   trend = 0,

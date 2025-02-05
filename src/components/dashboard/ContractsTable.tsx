@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableBody,
@@ -12,16 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pagination } from "@/components/ui/pagination";
 import { Search, SortAsc, SortDesc, Filter } from "lucide-react";
-
-interface Contract {
-  id: string;
-  name: string;
-  status: "active" | "expired" | "pending";
-  value: number;
-  startDate: string;
-  endDate: string;
-  company: string;
-}
+import { FC } from "react";
+import { Contract } from "@/types/contract";
 
 interface ContractsTableProps {
   contracts?: Contract[];
@@ -63,7 +54,7 @@ const defaultContracts: Contract[] = [
   },
 ];
 
-const ContractsTable: React.FC<ContractsTableProps> = ({
+const ContractsTable: FC<ContractsTableProps> = ({
   contracts = defaultContracts,
   onSort = () => {},
   onFilter = () => {},

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContracts, addContract } from "@/store/contractsSlice";
 import type { RootState, AppDispatch } from "@/store";
@@ -10,19 +10,20 @@ import ContractDetailsModal from "./dashboard/ContractDetailsModal";
 import Sidebar from "./dashboard/Sidebar";
 import { Button } from "./ui/button";
 import { Plus, Menu } from "lucide-react";
+import { Contract } from "@/types/contract";
 
 interface HomeProps {
   initialCollapsed?: boolean;
 }
 
-const Home: React.FC<HomeProps> = ({
+const Home: FC<HomeProps> = ({
   initialCollapsed = window.innerWidth < 1024,
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] =
-    React.useState(initialCollapsed);
-  const [showAddModal, setShowAddModal] = React.useState(false);
+    useState(initialCollapsed);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedContract, setSelectedContract] =
-    React.useState<Contract | null>(null);
+    useState<Contract | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const { contracts, loading, error, currentPage, totalPages } = useSelector(
@@ -74,16 +75,16 @@ const Home: React.FC<HomeProps> = ({
           <MetricsHeader
             totalContracts={contracts.length}
             activeContracts={
-              contracts.filter((c) => c.status === "active").length
+              contracts.filter((c) => c.status === "Ativo").length
             }
             expiringContracts={
-              contracts.filter((c) => c.status === "pending").length
+              contracts.filter((c) => c.status === "Expirado").length
             }
-            totalValue={contracts.reduce((sum, c) => sum + c.value, 0)}
+            totalValue={contracts.reduce((sum, c) => sum + Number(c.amount), 0)}
             onMetricClick={(metric) => {
               const contract = contracts.find((c) => {
-                if (metric === "active") return c.status === "active";
-                if (metric === "pending") return c.status === "pending";
+                if (metric === "active") return c.status === "Ativo";
+                if (metric === "pending") return c.status === "Pendente de Renovação";
                 return true;
               });
               if (contract) setSelectedContract(contract);

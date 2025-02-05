@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +18,7 @@ import {
 } from "../ui/select";
 import DatePickerWithRange from "../ui/date-picker-with-range";
 import { addDays } from "date-fns";
+import { FormEvent, useState } from "react";
 
 interface AddContractModalProps {
   open?: boolean;
@@ -40,7 +40,7 @@ const AddContractModal = ({
   onClose = () => {},
   onSubmit = () => {},
 }: AddContractModalProps) => {
-  const [formData, setFormData] = React.useState<ContractFormData>({
+  const [formData, setFormData] = useState<ContractFormData>({
     contractName: "",
     contractType: "",
     startDate: new Date(),
@@ -49,7 +49,7 @@ const AddContractModal = ({
     description: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
     onClose();

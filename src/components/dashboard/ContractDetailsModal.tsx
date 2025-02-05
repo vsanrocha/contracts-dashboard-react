@@ -1,24 +1,17 @@
-import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import { CalendarDays, Building2, DollarSign } from "lucide-react";
+import { FC } from "react";
+import { Contract } from "@/types/contract";
 
 interface ContractDetailsModalProps {
-  contract?: {
-    id: string;
-    name: string;
-    status: "active" | "expired" | "pending";
-    value: number;
-    startDate: string;
-    endDate: string;
-    company: string;
-  };
+  contract?: Contract;
   open: boolean;
   onClose: () => void;
 }
 
-const ContractDetailsModal: React.FC<ContractDetailsModalProps> = ({
+const ContractDetailsModal: FC<ContractDetailsModalProps> = ({
   contract,
   open,
   onClose,
@@ -39,7 +32,7 @@ const ContractDetailsModal: React.FC<ContractDetailsModalProps> = ({
         </DialogHeader>
         <div className="grid gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">{contract.name}</h2>
+            <h2 className="text-xl font-semibold">{contract.contractName}</h2>
             <Badge className={statusColors[contract.status]}>
               {contract.status.charAt(0).toUpperCase() +
                 contract.status.slice(1)}
@@ -53,7 +46,7 @@ const ContractDetailsModal: React.FC<ContractDetailsModalProps> = ({
                 <span>Contract Value</span>
               </div>
               <p className="text-2xl font-bold">
-                ${contract.value.toLocaleString()}
+                ${contract.amount.toLocaleString()}
               </p>
             </Card>
 
@@ -62,7 +55,7 @@ const ContractDetailsModal: React.FC<ContractDetailsModalProps> = ({
                 <Building2 className="h-4 w-4" />
                 <span>Company</span>
               </div>
-              <p className="text-2xl font-bold">{contract.company}</p>
+              <p className="text-2xl font-bold">{contract.clientOrSupplier}</p>
             </Card>
           </div>
 
