@@ -4,7 +4,7 @@
     "name": "Manutenção TI",
     "clientOrSupplier": "ABC Ltda.",
     "startDate": "15/01/2023",
-    "endDate": "15/02/2025",
+    "endDate": "02/10/2025",
     "status": "active",
     "amount": 150000,
     "type": "Serviço"
@@ -14,7 +14,7 @@
     "name": "Fornecimento Materiais",
     "clientOrSupplier": "XYZ S.A.",
     "startDate": "10/06/2022",
-    "endDate": "10/06/2024",
+    "endDate": "06/10/2025",
     "status": "expired",
     "amount": 200000,
     "type": "Fornecimento"
@@ -24,7 +24,7 @@
     "name": "Consultoria Financeira",
     "clientOrSupplier": "123 Consulting",
     "startDate": "01/09/2023",
-    "endDate": "01/09/2024",
+    "endDate": "06/09/2025",
     "status": "pending",
     "amount": 100000,
     "type": "Consultoria"
@@ -34,7 +34,7 @@
     "name": "Desenvolvimento Web",
     "clientOrSupplier": "Empresa Beta",
     "startDate": "20/02/2024",
-    "endDate": "20/02/2026",
+    "endDate": "01/02/2026",
     "status": "active",
     "amount": 300000,
     "type": "Serviço"
