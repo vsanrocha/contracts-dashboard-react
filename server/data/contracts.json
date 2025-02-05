@@ -1,0 +1,52 @@
+[
+  {
+    "id": "CT-001",
+    "contractName": "Manutenção TI",
+    "clientOrSupplier": "ABC Ltda.",
+    "startDate": "15/01/2023",
+    "dueDate": "15/01/2025",
+    "status": "Ativo",
+    "contractValue": "R$ 150.000,00",
+    "contractType": "Serviço"
+  },
+  {
+    "id": "CT-002",
+    "contractName": "Fornecimento Materiais",
+    "clientOrSupplier": "XYZ S.A.",
+    "startDate": "10/06/2022",
+    "dueDate": "10/06/2024",
+    "status": "Expirado",
+    "contractValue": "R$ 200.000,00",
+    "contractType": "Fornecimento"
+  },
+  {
+    "id": "CT-003",
+    "contractName": "Consultoria Financeira",
+    "clientOrSupplier": "123 Consulting",
+    "startDate": "01/09/2023",
+    "dueDate": "01/09/2024",
+    "status": "Pendente de Renovação",
+    "contractValue": "R$ 100.000,00",
+    "contractType": "Consultoria"
+  },
+  {
+    "id": "CT-004",
+    "contractName": "Desenvolvimento Web",
+    "clientOrSupplier": "Empresa Beta",
+    "startDate": "20/02/2024",
+    "dueDate": "20/02/2026",
+    "status": "Ativo",
+    "contractValue": "R$ 300.000,00",
+    "contractType": "Serviço"
+  },
+  {
+    "id": "CT-005",
+    "contractName": "Suporte Técnico",
+    "clientOrSupplier": "Fornecedor Z",
+    "startDate": "01/07/2023",
+    "dueDate": "01/07/2024",
+    "status": "Próximo ao Vencimento",
+    "contractValue": "R$ 80.000,00",
+    "contractType": "Fornecimento"
+  }
+]

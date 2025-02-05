@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Contract, ContractFormData } from "@/types/contract";
 
-const API_URL = "https://api.example.com"; // Replace with your API URL
+const API_URL = "http://localhost:3000/api"; // Updated to point to the new Express server
 
 export const contractsApi = {
   getContracts: async (page: number = 1) => {

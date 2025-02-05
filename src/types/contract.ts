@@ -1,19 +1,21 @@
 export interface Contract {
   id: string;
-  name: string;
-  status: "active" | "expired" | "pending";
-  value: number;
+  contractName: string;
+  clientOrSupplier: string;
   startDate: string;
-  endDate: string;
-  company: string;
+  dueDate: string;
+  status: "Ativo" | "Expirado" | "Pendente de Renovação" | "Próximo ao Vencimento";
+  contractValue: string;
+  contractType: string;
 }
 
 export interface ContractFormData {
   contractName: string;
-  contractType: string;
+  clientOrSupplier: string;
   startDate: Date;
-  endDate: Date;
-  value: string;
+  dueDate: Date;
+  contractValue: string;
+  contractType: string;
   description: string;
 }
 
