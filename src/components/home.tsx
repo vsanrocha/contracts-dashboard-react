@@ -1,7 +1,4 @@
-import { useEffect, FC, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchContracts, addContract } from "@/store/contractsSlice";
-import type { RootState, AppDispatch } from "@/store";
+import { FC, useState } from "react";
 import MetricsHeader from "./dashboard/MetricsHeader";
 import ChartSection from "./dashboard/ChartSection";
 import ContractsTable from "./dashboard/ContractsTable";
@@ -10,7 +7,13 @@ import ContractDetailsModal from "./dashboard/ContractDetailsModal";
 import Sidebar from "./dashboard/Sidebar";
 import { Button } from "./ui/button";
 import { Plus, Menu } from "lucide-react";
-import { Contract } from "@/types/contract";
+import { Contract, ContractFormData } from "@/types/contract";
+import {
+  useContracts,
+  useAddContract,
+  useUpdateContract,
+  useDeleteContract,
+} from "@/hooks/useContracts";
 
 interface HomeProps {
   initialCollapsed?: boolean;
@@ -19,25 +22,17 @@ interface HomeProps {
 const Home: FC<HomeProps> = ({
   initialCollapsed = window.innerWidth < 1024,
 }) => {
-  const [sidebarCollapsed, setSidebarCollapsed] =
-    useState(initialCollapsed);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(initialCollapsed);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedContract, setSelectedContract] =
-    useState<Contract | null>(null);
-
-  const dispatch = useDispatch<AppDispatch>();
-  const { contracts, loading, error, currentPage, totalPages } = useSelector(
-    (state: RootState) => state.contracts,
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(
+    null
   );
 
-  useEffect(() => {
-    dispatch(fetchContracts(1));
-  }, [dispatch]);
+  const { data: contracts, error, isLoading } = useContracts();
+  const addContractMutation = useAddContract();
 
-  const handleAddContract = (data: any) => {
-    dispatch(addContract(data)).then(() => {
-      setShowAddModal(false);
-    });
+  const handleAddContract = (contract: ContractFormData) => {
+    addContractMutation.mutate(contract);
   };
 
   return (
@@ -67,40 +62,34 @@ const Home: FC<HomeProps> = ({
               onClick={() => setShowAddModal(true)}
               className="w-full sm:w-auto flex items-center justify-center gap-2"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4" />
               Add Contract
             </Button>
           </div>
 
           <MetricsHeader
-            totalContracts={contracts.length}
-            activeContracts={
-              contracts.filter((c) => c.status === "Ativo").length
-            }
-            expiringContracts={
-              contracts.filter((c) => c.status === "Expirado").length
-            }
-            totalValue={contracts.reduce((sum, c) => sum + Number(c.amount), 0)}
+            contracts={contracts}
             onMetricClick={(metric) => {
-              const contract = contracts.find((c) => {
+              const contract = contracts?.find((c) => {
                 if (metric === "active") return c.status === "Ativo";
-                if (metric === "pending") return c.status === "Pendente de Renovação";
+                if (metric === "pending")
+                  return c.status === "Pendente de Renovação";
                 return true;
               });
               if (contract) setSelectedContract(contract);
             }}
           />
-          <ChartSection />
-          {loading ? (
+          <ChartSection contracts={contracts}/>
+          {isLoading ? (
             <div className="text-center py-4">Loading...</div>
           ) : error ? (
-            <div className="text-center py-4 text-red-500">{error}</div>
+            <div className="text-center py-4 text-red-500">{error.message}</div>
           ) : (
             <ContractsTable
-              contracts={contracts}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(page) => dispatch(fetchContracts(page))}
+              contracts={contracts || []}
+              currentPage={1} // Update this as needed
+              totalPages={1} // Update this as needed
+              onPageChange={(page) => {}} // Update this as needed
               onRowClick={(contract) => setSelectedContract(contract)}
             />
           )}
