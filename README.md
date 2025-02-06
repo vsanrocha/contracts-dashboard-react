@@ -31,9 +31,10 @@ Este projeto é um dashboard para gerenciamento de contratos, desenvolvido utili
 
 1. Inicie o servidor de desenvolvimento e o backend:
     ```bash
-    npm run start
+    npm run dev
+    nem run serve
     ```
-2. Abra o navegador e acesse `http://localhost:3000`.
+2. Abra o navegador e acesse `http://localhost:5173`.
 
 ## Instruções para Teste
 
