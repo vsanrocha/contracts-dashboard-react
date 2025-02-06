@@ -33,7 +33,7 @@ interface AddContractModalProps {
 
 const defaultFormData: ContractFormData = {
   name: "",
-  type: "",
+  type: "Serviço",
   startDate: dayjs().toDate(),
   endDate: dayjs().add(30, "day").toDate(),
   amount: 0,
@@ -76,7 +76,7 @@ const AddContractModal = ({
         <DialogHeader>
           <DialogTitle>Criar Novo Contrato</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form data-testid="add-contract-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Nome do Contrato</Label>
@@ -166,13 +166,13 @@ const AddContractModal = ({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="value">Valor do Contrato</Label>
+              <Label htmlFor="amount">Valor</Label>
               <Controller
                 name="amount"
                 control={control}
                 render={({ field }) => (
                   <Input
-                    id="value"
+                    id="amount"
                     type="currency"
                     placeholder="Insira o valor do contrato"
                     {...field}
