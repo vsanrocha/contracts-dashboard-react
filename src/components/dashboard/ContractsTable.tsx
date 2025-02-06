@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pagination } from "@/components/ui/pagination";
-import { Search, SortAsc, SortDesc, Filter } from "lucide-react";
+import { Search, SortAsc, SortDesc } from "lucide-react";
 import { FC, useState } from "react";
 import { Contract } from "@/types/contract";
 import { formatCurrency } from "@/lib/utils";
@@ -22,6 +22,7 @@ interface ContractsTableProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onRowClick?: (contract: Contract) => void;
 }
 
 const statusColors = {
@@ -37,7 +38,7 @@ const statusText = {
   close_end: "Próximo ao Vencimento",
 };
 
-const ContractsTable: FC<ContractsTableProps> = ({ contracts = [] }) => {
+const ContractsTable: FC<ContractsTableProps> = ({ contracts = [], onRowClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<keyof Contract | null>(null);
@@ -80,6 +81,9 @@ const ContractsTable: FC<ContractsTableProps> = ({ contracts = [] }) => {
   };
 
   const handleRowClick = (contract: Contract) => {
+    if (onRowClick) {
+      onRowClick(contract);
+    }
     setSelectedContract(contract);
     setIsModalOpen(true);
   };

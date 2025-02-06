@@ -36,7 +36,7 @@ const defaultFormData: ContractFormData = {
   type: "",
   startDate: dayjs().toDate(),
   endDate: dayjs().add(30, "day").toDate(),
-  amount: "",
+  amount: 0,
   description: "",
   clientOrSupplier: "",
 };
@@ -149,7 +149,7 @@ const AddContractModal = ({
                   <DatePickerWithRange
                     from={field.value}
                     to={field.value}
-                    onSelect={(range: { from: Date; to: Date }) => {
+                    onSelect={(range) => {
                       if (range?.from && range?.to) {
                         setValue("startDate", range.from);
                         setValue("endDate", range.to);

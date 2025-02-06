@@ -15,7 +15,7 @@ export const useAddContract = () => {
     mutationFn: (newContract: ContractFormData) =>
       contractsApi.addContract(newContract),
     onSuccess: () => {
-      queryClient.invalidateQueries(["contracts"]);
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
     },
   });
 };
@@ -26,7 +26,7 @@ export const useUpdateContract = (id: string) => {
     mutationFn: (updatedContract: Partial<Contract>) =>
       contractsApi.updateContract(id, updatedContract),
     onSuccess: () => {
-      queryClient.invalidateQueries(["contracts"]);
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
     },
   });
 };
@@ -36,7 +36,7 @@ export const useDeleteContract = (id: string) => {
   return useMutation({
     mutationFn: () => contractsApi.deleteContract(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["contracts"]);
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
     },
   });
 };

@@ -12,9 +12,8 @@ import { Contract, ContractFormData } from "@/types/contract";
 import {
   useContracts,
   useAddContract,
-  useUpdateContract,
-  useDeleteContract,
 } from "@/hooks/useContracts";
+import { useFilteredContracts } from "@/hooks/useFilteredContracts";
 
 interface HomeProps {
   initialCollapsed?: boolean;
@@ -43,35 +42,7 @@ const Home: FC<HomeProps> = ({
     setShowAddModal(false);
   };
 
-  const filteredContracts = contracts.filter((contract) => {
-    let matches = true;
-
-    if (activeFilters?.startDateRange) {
-      const startDate = new Date(contract.startDate);
-      startDate.setHours(0, 0, 0, 0);
-      const filterFrom = new Date(activeFilters.startDateRange.from);
-      const filterTo = new Date(activeFilters.startDateRange.to);
-      filterFrom.setHours(0, 0, 0, 0);
-      filterTo.setHours(0, 0, 0, 0);
-      matches = matches && startDate >= filterFrom && startDate <= filterTo;
-    }
-
-    if (activeFilters?.endDateRange) {
-      const endDate = new Date(contract.endDate);
-      endDate.setHours(0, 0, 0, 0);
-      const filterFrom = new Date(activeFilters.endDateRange.from);
-      const filterTo = new Date(activeFilters.endDateRange.to);
-      filterFrom.setHours(0, 0, 0, 0);
-      filterTo.setHours(0, 0, 0, 0);
-      matches = matches && endDate >= filterFrom && endDate <= filterTo;
-    }
-
-    if (activeFilters?.status) {
-      matches = matches && contract.status === activeFilters.status;
-    }
-
-    return matches;
-  });
+  const filteredContracts = useFilteredContracts(contracts, activeFilters);
 
   return (
     <div className="flex h-screen bg-gray-100">

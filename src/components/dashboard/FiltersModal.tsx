@@ -77,7 +77,7 @@ const FiltersModal = ({
             <DatePickerWithRange
               from={startDateRange?.from}
               to={startDateRange?.to}
-              onSelect={(range: { from: Date; to: Date }) =>
+              onSelect={(range) =>
                 setStartDateRange(range)
               }
             />
@@ -87,7 +87,7 @@ const FiltersModal = ({
             <DatePickerWithRange
               from={endDateRange?.from}
               to={endDateRange?.to}
-              onSelect={(range: { from: Date; to: Date }) =>
+              onSelect={(range) =>
                 setEndDateRange(range)
               }
             />

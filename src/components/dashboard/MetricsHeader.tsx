@@ -21,8 +21,7 @@ const MetricCard: FC<MetricCardProps> = ({
 
   return (
     <Card
-      className="bg-white cursor-pointer hover:shadow-md transition-shadow"
-      onClick={() => onMetricClick?.(title.toLowerCase())}
+      className="bg-white"
     >
       <CardContent className="pt-6">
         <div className="flex justify-between items-start">
@@ -56,9 +55,10 @@ const MetricCard: FC<MetricCardProps> = ({
 
 interface MetricsHeaderProps {
   contracts: Contract[];
+  onMetricClick?: (metric: string) => void;
 }
 
-const MetricsHeader: FC<MetricsHeaderProps> = ({contracts}) => {
+const MetricsHeader: FC<MetricsHeaderProps> = ({ contracts, onMetricClick }) => {
 
   const contractsCount=contracts?.length || 0
   const activeContracts= contracts?.filter((c) => c.status === "active").length || 0
