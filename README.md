@@ -1,30 +1,69 @@
-# React + TypeScript + Vite
+# Contracts Dashboard React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Visão Geral
 
-Currently, two official plugins are available:
+Este projeto é um dashboard para gerenciamento de contratos, desenvolvido utilizando React. Ele permite visualizar, adicionar, editar e excluir contratos, além de fornecer uma visão geral dos contratos existentes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Funcionalidades Implementadas
 
-## Expanding the ESLint configuration
+- Visualização de contratos
+- Adição de novos contratos
+- Edição de contratos existentes
+- Exclusão de contratos
+- Filtros e busca de contratos
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Instruções para Instalação
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone o repositório:
+    ```bash
+    git clone https://github.com/seu-usuario/contracts-dashboard-react.git
+    ```
+2. Navegue até o diretório do projeto:
+    ```bash
+    cd contracts-dashboard-react
+    ```
+3. Instale as dependências:
+    ```bash
+    npm install
+    ```
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Instruções para Execução
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Inicie o servidor de desenvolvimento e o backend:
+    ```bash
+    npm run start
+    ```
+2. Abra o navegador e acesse `http://localhost:3000`.
+
+## Instruções para Teste
+
+1. Execute os testes:
+    ```bash
+    npm test
+    ```
+
+## Decisões de Arquitetura
+
+- **React**: Escolhido pela sua eficiência na construção de interfaces de usuário dinâmicas e reutilizáveis.
+- **React Query**: Utilizado para gerenciamento de estado das requisições, facilitando a manipulação e cacheamento dos dados.
+- **React Router**: Implementado para navegação entre diferentes páginas do dashboard.
+- **Axios**: Utilizado para realizar requisições HTTP para a API de contratos.
+
+## Escolhas de Bibliotecas e Ferramentas
+
+- **Tempolabs**: Utilizado para criar as interfaces (HTML e CSS), acelerando o processo de design.
+- **Windsurf com O3 mini**: Utilizado para desenvolver as lógicas e testes, garantindo a qualidade do código.
+- **ShadCN**: Utilizado para componentes, fornecendo uma biblioteca de componentes reutilizáveis e estilizados.
+- **Tailwind CSS**: Utilizado para estilização, permitindo um design rápido e eficiente com classes utilitárias.
+- **Vitest e Testing Library**: Utilizados para testes, garantindo a qualidade e funcionalidade do código.
+
+## Desafios Enfrentados e Soluções Aplicadas
+
+- **Gerenciamento de Estado das Requisições**: A implementação do React Query ajudou a centralizar o estado das requisições, facilitando a manipulação e cacheamento dos dados.
+- **Navegação**: A utilização do React Router simplificou a navegação entre diferentes componentes e páginas.
+- **Requisições HTTP**: A escolha do Axios permitiu uma integração mais simples e eficiente com a API de contratos.
+
+## Utilização de IA no Desenvolvimento
+
+- **Tempolabs**: Utilizado para criar as telas (HTML e CSS), acelerando o processo de design e implementação da interface.
+- **Windsurf com O3 mini**: Utilizado para desenvolver as lógicas e testes, garantindo a qualidade e funcionalidade do código de forma mais rápida e eficiente.
