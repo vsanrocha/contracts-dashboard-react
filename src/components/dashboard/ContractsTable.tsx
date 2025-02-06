@@ -19,9 +19,6 @@ import dayjs from "dayjs";
 
 interface ContractsTableProps {
   contracts?: Contract[];
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
   onRowClick?: (contract: Contract) => void;
 }
 

@@ -35,7 +35,7 @@ const ContractDetailsModal: FC<ContractDetailsModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] bg-white">
+      <DialogContent data-testid="dialog-content" className="sm:max-w-[600px] bg-white">
         <DialogHeader>
           <DialogTitle>Detalhes do Contrato</DialogTitle>
         </DialogHeader>

@@ -8,18 +8,7 @@ vi.mock('@/hooks/useContracts', () => ({
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import AddContractModal from "./AddContractModal";
-import { ContractFormData } from "@/types/contract";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const defaultFormData: ContractFormData = {
-  name: "",
-  type: "",
-  startDate: new Date(),
-  endDate: new Date(),
-  amount: 0,
-  description: "",
-  clientOrSupplier: "",
-};
 
 const queryClient = new QueryClient({
   defaultOptions: {
